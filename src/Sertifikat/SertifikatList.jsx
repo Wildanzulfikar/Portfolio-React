@@ -1,9 +1,19 @@
-import { useState, useRef } from "react";
-import SertifikatItem from "./SertifikatItem";
-import { ChevronLeft, ChevronRight } from "lucide-react"; // Optional icon (atau pakai unicode ❮❯)
+import { useRef, useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  X,
+  ZoomIn,
+} from "lucide-react";
+
+import {
+  motion,
+  AnimatePresence,
+} from "framer-motion";
 
 function SertifikatList({ sertifikats }) {
   const [zoomImage, setZoomImage] = useState(null);
+
   const scrollRef = useRef(null);
 
   const scroll = (offset) => {
@@ -14,63 +24,307 @@ function SertifikatList({ sertifikats }) {
   };
 
   return (
-    <div className="relative">
-      {/* Tombol kiri */}
-      <button
-        className="absolute z-10 left-2 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/60 backdrop-blur text-blue-900 rounded-full p-2 shadow-md"
-        onClick={() => scroll(-300)}
-      >
-        ❮
-      </button>
+    <>
+      <div className="relative">
+        {/* Left Button */}
+        <button
+          onClick={() => scroll(-450)}
+          className="
+            absolute
+            left-0
+            top-1/2
+            -translate-y-1/2
+            z-20
+            w-14
+            h-14
+            rounded-full
+            border
+            border-white/10
+            bg-black/40
+            backdrop-blur-xl
+            text-white
+            flex
+            items-center
+            justify-center
+            hover:scale-110
+            hover:bg-[#FFB22C]
+            hover:text-black
+            transition-all
+            duration-300
+          "
+        >
+          <ChevronLeft />
+        </button>
 
-      {/* Scrollable Area */}
-      <div
-        ref={scrollRef}
-        className="overflow-x-auto overflow-y-hidden pb-6 scroll-smooth snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] px-10"
-      >
-        <div className="flex gap-12 w-max pr-8">
-          {sertifikats.map((sertifikat) => (
-            <div
+        {/* Right Button */}
+        <button
+          onClick={() => scroll(450)}
+          className="
+            absolute
+            right-0
+            top-1/2
+            -translate-y-1/2
+            z-20
+            w-14
+            h-14
+            rounded-full
+            border
+            border-white/10
+            bg-black/40
+            backdrop-blur-xl
+            text-white
+            flex
+            items-center
+            justify-center
+            hover:scale-110
+            hover:bg-[#FFB22C]
+            hover:text-black
+            transition-all
+            duration-300
+          "
+        >
+          <ChevronRight />
+        </button>
+
+        {/* Scroll Area */}
+        <div
+          ref={scrollRef}
+          className="
+            flex
+            gap-10
+            overflow-x-auto
+            scroll-smooth
+            snap-x
+            snap-mandatory
+            pb-6
+            px-16
+
+            [-ms-overflow-style:none]
+            [scrollbar-width:none]
+            [&::-webkit-scrollbar]:hidden
+          "
+        >
+          {sertifikats.map((sertifikat, index) => (
+            <motion.div
               key={sertifikat.id}
-              className="group snap-start relative p-2 rounded-xl bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-transform duration-500 ease-in-out cursor-zoom-in min-w-[220px] backdrop-blur-sm bg-opacity-80"
-              onClick={() => setZoomImage(sertifikat.image)}
+              initial={{
+                opacity: 0,
+                y: 40,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.08,
+              }}
+              viewport={{ once: true }}
+              className="
+                group
+                relative
+                min-w-[320px]
+                md:min-w-[420px]
+                snap-center
+                cursor-pointer
+              "
+              onClick={() =>
+                setZoomImage(sertifikat.image)
+              }
             >
-              <div className="overflow-hidden">
-                <SertifikatItem {...sertifikat} />
+              {/* Glow */}
+              <div
+                className="
+                  absolute
+                  inset-0
+                  rounded-[34px]
+                  bg-[#FFB22C]/0
+                  blur-3xl
+                  group-hover:bg-[#FFB22C]/10
+                  transition-all
+                  duration-500
+                "
+              />
+
+              {/* Card */}
+              <div
+                className="
+                  relative
+                  overflow-hidden
+                  rounded-[34px]
+                  border
+                  border-white/10
+                  bg-white/[0.03]
+                  backdrop-blur-2xl
+                  shadow-[0_10px_60px_rgba(0,0,0,0.5)]
+                "
+              >
+                {/* Image */}
+                <div className="overflow-hidden">
+                  <motion.img
+                    whileHover={{
+                      scale: 1.06,
+                    }}
+                    transition={{
+                      duration: 0.5,
+                    }}
+                    src={sertifikat.image}
+                    alt="sertifikat"
+                    className="
+                      w-full
+                      h-[240px]
+                      md:h-[300px]
+                      object-cover
+                    "
+                  />
+                </div>
+
+                {/* Overlay */}
+                <div
+                  className="
+                    absolute
+                    inset-0
+                    bg-gradient-to-t
+                    from-black/80
+                    via-black/10
+                    to-transparent
+                  "
+                />
+
+                {/* Floating Content */}
+                <div
+                  className="
+                    absolute
+                    bottom-0
+                    left-0
+                    right-0
+                    p-7
+                    flex
+                    items-center
+                    justify-between
+                  "
+                >
+                  <div>
+                    <h1
+                      className="
+                        text-white
+                        font-bold
+                        text-xl
+                      "
+                    >
+                      Certificate
+                    </h1>
+
+                    <p className="text-white/60 text-sm mt-1">
+                      Click to preview
+                    </p>
+                  </div>
+
+                  <div
+                    className="
+                      w-14
+                      h-14
+                      rounded-2xl
+                      bg-white/10
+                      backdrop-blur-xl
+                      border
+                      border-white/10
+                      flex
+                      items-center
+                      justify-center
+                      text-white
+                    "
+                  >
+                    <ZoomIn />
+                  </div>
+                </div>
               </div>
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-white text-sm font-semibold bg-black/50 px-4 py-2 rounded-lg">
-                  Klik untuk Zoom 🔍
-                </span>
-              </div>
-            </div>
+            </motion.div>
           ))}
-          <div className="min-w-[16px]" />
         </div>
       </div>
 
-      {/* Tombol kanan */}
-      <button
-        className="absolute z-10 right-2 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/60 backdrop-blur text-blue-900 rounded-full p-2 shadow-md"
-        onClick={() => scroll(300)}
-      >
-        ❯
-      </button>
+      {/* MODAL */}
+      <AnimatePresence>
+        {zoomImage && (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            className="
+              fixed
+              inset-0
+              z-[999]
+              bg-black/80
+              backdrop-blur-xl
+              flex
+              items-center
+              justify-center
+              p-6
+            "
+            onClick={() => setZoomImage(null)}
+          >
+            {/* Close */}
+            <button
+              className="
+                absolute
+                top-8
+                right-8
+                w-14
+                h-14
+                rounded-full
+                bg-white/10
+                backdrop-blur-xl
+                border
+                border-white/10
+                text-white
+                flex
+                items-center
+                justify-center
+                hover:bg-[#FFB22C]
+                hover:text-black
+                transition-all
+              "
+            >
+              <X />
+            </button>
 
-      {/* Modal Zoom */}
-      {zoomImage && (
-        <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
-          onClick={() => setZoomImage(null)}
-        >
-          <img
-            src={zoomImage}
-            alt="Zoom Sertifikat"
-            className="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-lg"
-          />
-        </div>
-      )}
-    </div>
+            {/* Image */}
+            <motion.img
+              initial={{
+                scale: 0.8,
+                opacity: 0,
+              }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+              }}
+              exit={{
+                scale: 0.8,
+                opacity: 0,
+              }}
+              transition={{
+                duration: 0.4,
+              }}
+              src={zoomImage}
+              alt="Zoom Sertifikat"
+              className="
+                max-w-[95%]
+                max-h-[90vh]
+                rounded-[30px]
+                shadow-[0_20px_100px_rgba(0,0,0,0.8)]
+              "
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

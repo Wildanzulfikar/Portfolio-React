@@ -1,5 +1,54 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
+
+* {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(255,178,44,0.08),
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(255,255,255,0.04),
+      transparent 20%
+    ),
+    #050505;
+
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Shine Animation */
+@keyframes shine {
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
 }
